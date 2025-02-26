@@ -59,7 +59,7 @@ listpath = glob.glob("/data/user/tchau/Sandbox/SelfVeto_DeepCore/scripts/corsika
 with open(dag_file, 'w') as f:
     for i, path in enumerate(listpath):
         JOBNAME = f"corsika_reader_{i}"
-        outpath = f"{output_dir}/corsika22803_processed_{i}.i3.zst"
+        outpath = f"{output_dir}/corsika22803_processedv2_{i}.i3.zst"
         f.write(f'JOB {JOBNAME}'+' corsika.submit \n')
         f.write(f'VARS {JOBNAME}'
                 +f' JOBNAME="{JOBNAME}"'

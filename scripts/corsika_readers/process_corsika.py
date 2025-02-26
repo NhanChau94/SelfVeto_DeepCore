@@ -3,12 +3,7 @@
 
 from icecube import icetray, dataio, dataclasses, simclasses,  recclasses, astro, MuonGun
 import numpy as np
-import sys
-import glob
-import math
-import matplotlib.path as mpltPath
 from optparse import OptionParser
-import pickle as pkl
 
 
 parser = OptionParser()
@@ -46,25 +41,26 @@ def process_frame(frame):
     if "I3MCTree" not in frame:
         return None
     
-    mctree = frame["I3MCTree"]
-    new_mc_tree = dataclasses.I3MCTree()
-    new_mc_tree_coincidence = dataclasses.I3MCTree()
+    # mctree = frame["I3MCTree"]
+    # new_mc_tree = dataclasses.I3MCTree()
+    # new_mc_tree_coincidence = dataclasses.I3MCTree()
     
-    polyplopia_primary = frame["PolyplopiaPrimary"]
+    # polyplopia_primary = frame["PolyplopiaPrimary"]
     
-    for particle in mctree:
-        if abs(particle.pdg_encoding) in [12, 14, 16, 13]:
-            if mctree.get_primary(particle) == polyplopia_primary:
-                new_mc_tree.insert(particle)
-            else:
-                new_mc_tree_coincidence.insert(particle)
+    # for particle in mctree:
+    #     if abs(particle.pdg_encoding) in [12, 14, 16, 13]:
+    #         if mctree.get_primary(particle) == polyplopia_primary:
+    #             new_mc_tree.insert(particle)
+    #         else:
+    #             new_mc_tree_coincidence.insert(particle)
     
     new_frame = icetray.I3Frame(icetray.I3Frame.DAQ)
     new_frame["CorsikaWeightMap"] = frame["CorsikaWeightMap"]
     new_frame["PolyplopiaPrimary"] = frame["PolyplopiaPrimary"]
     new_frame["MMCTrackList"] = frame["MMCTrackList"]
-    new_frame["PrimaryShower"] = new_mc_tree
-    new_frame["Coincidence"] = new_mc_tree_coincidence
+    new_frame["I3MCTree"] = frame["I3MCTree"]
+    # new_frame["PrimaryShower"] = new_mc_tree
+    # new_frame["Coincidence"] = new_mc_tree_coincidence
     
     return new_frame
 
