@@ -23,6 +23,8 @@ parser.add_argument("--Emax", type=float, default=1000., help="maximum energy")
 parser.add_argument("--nE", type=int, default=50, help="number of energy scan logarithmally")
 parser.add_argument("--nutype", type=str, default='nu_mu', help="neutrino type: nu_(e|mu)(bar)")
 parser.add_argument("--fluxtype", type=str, default='conv', help="flux type: conv|pr|_parent_")
+parser.add_argument("--depth", type=float, default=2100, help="depth of the muon")
+
 
 args = parser.parse_args()
 cos_theta = args.cos_theta
@@ -31,17 +33,18 @@ Emax = args.Emax
 nE = args.nE
 nutype = args.nutype
 fluxtype = args.fluxtype
+depth = args.depth
 
-energies = np.logspace( np.log10(Emin), np.log10(Emin), nE )
+energies = np.logspace( np.log10(Emin), np.log10(Emax), nE )
 kind = f"{fluxtype} {nutype}"
 
 pf = [passing(enu *Units.GeV, cos_theta, kind=kind, prpl='mudet_oscNextL7',
              pmodel=(pm.HillasGaisser2012, 'H3a'),
-             hadr='SIBYLL2.3c', depth=2100*Units.m,
+             hadr='SIBYLL2.3c', depth=depth*Units.m,
              density=('CORSIKA', ('SouthPole','December'))) for enu in  energies]
 
 output = {"cos_theta":cos_theta, "pf": pf, "energy":energies}
-outpath = f"/data/user/tchau/Sandbox/SelfVeto_DeepCore/scripts/nuVeto/output_pf/pf_oscNext_L7_{cos_theta:.3f}_{fluxtype}_{nutype}.pkl"
+outpath = f"/data/user/tchau/Sandbox/SelfVeto_DeepCore/scripts/nuVeto/output_pf/pf_oscNext_L7_{cos_theta:.3f}_{fluxtype}_{nutype}_{depth}m.pkl"
 with open(outpath, "wb") as file:
     pkl.dump(output, file)
 file.close()

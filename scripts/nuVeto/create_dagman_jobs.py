@@ -37,7 +37,7 @@ with open(sub_file, 'w') as s:
     s.write('request_memory = 10GB'+'\n')
     s.write('getenv = True'+'\n')
     s.write('\n')
-    s.write('arguments = --cos_theta $(cos_theta) --nutype $(nutype) '+'\n')
+    s.write('arguments = --cos_theta $(cos_theta) --nutype $(nutype) --depth $(depth)'+'\n')
     s.write('queue')
     s.close()
 
@@ -48,15 +48,17 @@ submit = f'{submit_dir}/submit.sh'
 dag_file = f'{submit_dir}/nuVeto.dag'
 cos_theta = np.linspace(0, 1, 40)
 nutypes = ["nu_e", "nu_mu", "nu_tau", "nu_ebar", "nu_mubar", "nu_taubar"]
+depths = [2450, 2275]
 
 with open(dag_file, 'w') as f:
     for nu in nutypes:
         for cz in cos_theta:
-            JOBNAME = f"nuVeto_{nu}{cz:.3f}"
-            f.write(f'JOB {JOBNAME}'+' nuVeto.submit \n')
-            f.write(f'VARS {JOBNAME}'
-                    +f' JOBNAME="{JOBNAME}"'
-                    +f' cos_theta="{cz}" nutype="{nu}"'+'\n')
+            for depth in depths:
+                JOBNAME = f"nuVeto_{nu}{cz:.3f}{depth}m"
+                f.write(f'JOB {JOBNAME}'+' nuVeto.submit \n')
+                f.write(f'VARS {JOBNAME}'
+                        +f' JOBNAME="{JOBNAME}"'
+                        +f' cos_theta="{cz}" nutype="{nu}" depth="{depth}"'+'\n')
 f.close()
 
 with open(submit, 'w') as s:
