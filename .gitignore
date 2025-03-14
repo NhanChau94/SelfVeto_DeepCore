@@ -1,0 +1,8 @@
+*.log
+*.pyc
+*.pkl
+*.ipynb_checkpoints
+*.png
+*.npy
+*.txt
+*.ipynb
